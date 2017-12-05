@@ -27,7 +27,7 @@ class Route {
    */
   private function buildPath(string $path) {
    $this->path['raw'] = $path;
-   $this->path['members'] = [];
+   $this->path['variables'] = [];
    $this->path['complex'] = [];
    $this->wildcard = false;
    if ($path === '*') {
@@ -65,7 +65,31 @@ class Route {
    */
   private function buildInternalVariable(string $member) {
     if (preg_match('/\{(.+?)\}/', $member, $match)) {
+      $capture = $match[1];
+      $exploded = explode(':', $capture);
+      $length = count($exploded);
+      if ($length == 1) {
+        $this->checkVariableUnicity($capture);
+        $this->path['variables'][$capture] = 'string';
+        $this->path['complex'][] = ['variable', $capture];
+        return;
+      }
+      if ($length == 2) {
+        $this->checkVariableUnicity($exploded[0]);
+        $this->path['variables'][$exploded[0]] = $exploded[1];
+        $this->path['complex'][] = ['variable', $exploded[0]];
+        return;
+      }
+    }
+    throw new exception\InvalidPathVariable($member);
+  }
 
+  /**
+   * Check if a variable is unique
+   */
+  private function checkVariableUnicity(string $key) {
+    if(\array_key_exists($key, $this->path['variables'])) {
+      throw new exception\InvalidPathVariable($key . ' already exists');
     }
   }
 
