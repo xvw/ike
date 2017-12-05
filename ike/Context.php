@@ -8,11 +8,11 @@ namespace ike;
  */
 class Context {
 
-  private $code;
-  private $method;
-  private $path;
-  private $parameters;
-  private $csrfToken;
+  protected $code;
+  protected $method;
+  protected $path;
+  protected $parameters;
+  protected $csrfToken;
 
   /**
    * Build a context of a session
