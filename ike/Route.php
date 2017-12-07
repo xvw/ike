@@ -82,8 +82,10 @@ class Route {
       }
       if ($length == 2) {
         $this->checkVariableUnicity($exploded[0]);
-        $this->path['variables'][$exploded[0]] = $exploded[1];
-        $this->path['complex'][] = ['variable', $exploded[0]];
+        $variableName = $exploded[0];
+        $variableRegex = type\regexFor($exploded[1]);
+        $this->path['variables'][$variableName] = $variableRegex;
+        $this->path['complex'][] = ['variable', $variableName];
         return;
       }
     }
