@@ -1,19 +1,19 @@
 <?php
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace ike;
 
 /**
  * Define an Application
  */
-class Application {
+class Application
+{
+    protected $context;
+    protected $routes;
 
-  protected $context;
-  protected $routes;
-
-  public function __construct() {
-    $this->context = new Context();
-    $this->routes = [];
-  }
-
+    public function __construct()
+    {
+        $this->context = new Context();
+        $this->routes = [];
+    }
 }

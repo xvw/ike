@@ -1,5 +1,6 @@
 <?php
 namespace ike;
+
 session_start();
 
 require 'util.php';
