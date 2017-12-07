@@ -30,6 +30,7 @@ class Context {
 
   /**
    * Compute the current path of the application
+   * @return string
    */
   private function computePath() : string {
     $base = pathinfo($_SERVER['SCRIPT_NAME'])['dirname'];
@@ -39,6 +40,7 @@ class Context {
 
   /**
    * extract the current "input parameters"
+   * @return array
    */
   private function computeInputParameters() : array {
     parse_str(file_get_contents('php://input'), $input);
@@ -47,6 +49,7 @@ class Context {
 
   /**
    * Retreive the parameters for a specific verb
+   * @return array
    */
    public function parameters(string $key) : array {
      $formattedKey = util\tokenize($key);
@@ -57,6 +60,7 @@ class Context {
 
    /**
     * Get parameters for the current method
+    * @return array
     */
     public function currentParameters() : array {
       return $this->parameters($this->method);

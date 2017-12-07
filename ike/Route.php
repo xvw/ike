@@ -15,6 +15,8 @@ class Route {
 
   /**
    * Build a route
+   * @param string $method the method of the route
+   * @param string $path the path of the route
    */
   private function __construct(string $method, string $path) {
     $this->method = util\tokenize($method);
@@ -24,6 +26,7 @@ class Route {
 
   /**
    * Build the real path of a Route
+   * @param string $path the path of the route
    */
   private function buildPath(string $path) {
    $this->path['raw'] = $path;
@@ -55,13 +58,16 @@ class Route {
 
   /**
    * Check if a Path member is a variable
+   * @param string $elt the fragment of the path
+   * @return bool
    */
   private function memberIsVariable(string $elt) : bool {
     return strlen($elt) > 0 && $elt[0] == '{' && $elt[strlen($elt)-1] == '}';
   }
 
   /**
-   * Save variable
+   * Build an URL variable
+   * @param string $member the fragment of the path
    */
   private function buildInternalVariable(string $member) {
     if (preg_match('/\{(.+?)\}/', $member, $match)) {
@@ -86,6 +92,7 @@ class Route {
 
   /**
    * Check if a variable is unique
+   * @param string $key the name of the url variable
    */
   private function checkVariableUnicity(string $key) {
     if(\array_key_exists($key, $this->path['variables'])) {
@@ -95,6 +102,7 @@ class Route {
 
   /**
    * Build a GET Route
+   * @param string $path the path of the route
    */
   public static function get(string $path) {
     return new Route('get', $path);
@@ -102,6 +110,7 @@ class Route {
 
   /**
    * Build a POST Route
+   * @param string $path the path of the route
    */
   public static function post(string $path) {
     return new Route('post', $path);
@@ -109,6 +118,7 @@ class Route {
 
   /**
    * Build a PUT Route
+   * @param string $path the path of the route
    */
   public static function put(string $path) {
     return new Route('put', $path);
@@ -116,6 +126,7 @@ class Route {
 
   /**
    * Build a DELETE Route
+   * @param string $path the path of the route
    */
   public static function delete(string $path) {
     return new Route('delete', $path);
