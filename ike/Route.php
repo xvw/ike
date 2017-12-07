@@ -9,17 +9,14 @@ namespace ike;
 
 class Route {
 
-  protected $method;
   protected $path;
   protected $wildcard;
 
   /**
    * Build a route
-   * @param string $method the method of the route
    * @param string $path the path of the route
    */
-  private function __construct(string $method, string $path) {
-    $this->method = util\tokenize($method);
+  public function __construct(string $path) {
     $this->path = [];
     $this->buildPath($path);
   }
@@ -103,35 +100,29 @@ class Route {
   }
 
   /**
-   * Build a GET Route
-   * @param string $path the path of the route
+   * Build a regex from a route
+   * @return string
    */
-  public static function get(string $path) {
-    return new Route('get', $path);
+  public function toRegex() : string {
+    $result = "#^";
+    foreach($this->path['complex'] as $path) {
+      if ($path[0] === 'plain') {
+        $result .= $path[1];
+      } else {
+        $result .= $this->path['variables'][$path[1]];
+      }
+    }
+    return $result . "$#";
   }
 
   /**
-   * Build a POST Route
-   * @param string $path the path of the route
+   * Check if a route is according an input (uri)
+   * @param string $uri the input's uri
+   * @return bool
    */
-  public static function post(string $path) {
-    return new Route('post', $path);
-  }
-
-  /**
-   * Build a PUT Route
-   * @param string $path the path of the route
-   */
-  public static function put(string $path) {
-    return new Route('put', $path);
-  }
-
-  /**
-   * Build a DELETE Route
-   * @param string $path the path of the route
-   */
-  public static function delete(string $path) {
-    return new Route('delete', $path);
+  public function isAccordingTo(string $uri) : bool {
+    if($this->wildcard) return true;
+    return \preg_match($this->toRegex(), $uri) !== 0;
   }
 
 }

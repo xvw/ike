@@ -51,29 +51,38 @@ class Context {
    * Retreive the parameters for a specific verb
    * @return array
    */
-   public function parameters(string $key) : array {
-     $formattedKey = util\tokenize($key);
-     if($formattedKey === 'get' || $formattedKey === 'post') {
-       return $this->parameters[$formattedKey];
-     } return $this->parameters['input'];
-   }
+  public function parameters(string $key) : array {
+   $formattedKey = util\tokenize($key);
+   if($formattedKey === 'get' || $formattedKey === 'post') {
+     return $this->parameters[$formattedKey];
+   } return $this->parameters['input'];
+  }
 
    /**
     * Get parameters for the current method
     * @return array
     */
-    public function currentParameters() : array {
-      return $this->parameters($this->method);
-    }
+  public function currentParameters() : array {
+    return $this->parameters($this->method);
+  }
 
     /**
      * Generate a CSRFToken
      */
-     private function generateCSRFToken() {
-       if(empty($_SESSION['ike.__csrf__'])) {
-         $_SESSION['ike.__csrf__'] = util\securityToken();
-       }
-       $this->csrfToken = $_SESSION['ike.__csrf__'];
+   private function generateCSRFToken() {
+     if(empty($_SESSION['ike.__csrf__'])) {
+       $_SESSION['ike.__csrf__'] = util\securityToken();
      }
+     $this->csrfToken = $_SESSION['ike.__csrf__'];
+   }
+
+    /**
+     * Check if a context is according to a route
+     * @param Route $route the checked route
+     * @return bool
+     */
+   public function matchWith(Route $route) : bool {
+     return $route->isAccordingTo($this->path);
+   }
 
 }
