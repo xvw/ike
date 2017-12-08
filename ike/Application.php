@@ -9,11 +9,11 @@ namespace ike;
 class Application
 {
     protected $context;
-    protected $routes;
+    protected $services;
 
     public function __construct()
     {
         $this->context = new Context();
-        $this->routes = [];
+        $this->services = [];
     }
 }

@@ -56,3 +56,27 @@ function suggestionFor(string $key, array $keys) : string
     }));
     return $clone[0];
 }
+
+/**
+ * Validate Callback with parameters
+ * @param Callable $fun function to be checked
+ * @param array $params required parameters
+ * @throws exception\InvalidFunction
+ * @throws exception\ParameterDoesNotExistsInFunction
+ */
+function isValidFunctionParameters(\Closure $function, array $input)
+{
+    $reflex = new \ReflectionFunction($function);
+    $nbparams = $reflex->getNumberOfParameters();
+    if ($nbparams !== count($input)) {
+        $message = 'The function does not have the awaited parameters';
+        throw new \ike\exception\InvalidFunction($message);
+    }
+    foreach ($reflex->getParameters() as $i => $param) {
+        $a = $param->getName();
+        $b = $input[$i];
+        if ($a !== $b) {
+            throw new \ike\exception\ParameterDoesNotExistsInFunction($a, $b);
+        }
+    }
+}

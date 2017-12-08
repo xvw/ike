@@ -11,7 +11,7 @@ class InvalidPathVariable extends Base
 {
 }
 
-class NeedSuggestion extends Base¨
+class NeedSuggestion extends Base
 {
     private $baseInput;
     private $suggestedOutput;
@@ -25,12 +25,20 @@ class NeedSuggestion extends Base¨
     {
         $this->baseInput = $input;
         $this->suggestion = $suggestion;
-        $message  = 'Undefined type : [' . $input;
+        $message  = 'Invalid : [' . $input;
         $message .= '], did you mean maybe [' . $suggestion . '] ?';
         parent::__construct($message, ...$params);
     }
 }
 
 class InvalidType extends NeedSuggestion
+{
+}
+
+class InvalidFunction extends Base
+{
+}
+
+class ParameterDoesNotExistsInFunction extends NeedSuggestion
 {
 }
