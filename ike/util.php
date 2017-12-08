@@ -64,7 +64,7 @@ function suggestionFor(string $key, array $keys) : string
  * @throws exception\InvalidFunction
  * @throws exception\ParameterDoesNotExistsInFunction
  */
-function isValidFunctionParameters(\Closure $function, array $input)
+function validFunctionParameters(\Closure $function, array $input)
 {
     $reflex = new \ReflectionFunction($function);
     $nbparams = $reflex->getNumberOfParameters();

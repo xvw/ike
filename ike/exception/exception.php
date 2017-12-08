@@ -11,6 +11,21 @@ class InvalidPathVariable extends Base
 {
 }
 
+class MissingField extends Base
+{
+    private $missingField;
+    /**
+     * Build a Missing Field Exception
+     * @param string $input the gived input
+     */
+    public function __construct(string $input, ...$params)
+    {
+        $this->missingField = $input;
+        $message  = 'field ['.$input.'] is missing';
+        parent::__construct($message, ...$params);
+    }
+}
+
 class NeedSuggestion extends Base
 {
     private $baseInput;

@@ -134,4 +134,36 @@ class Route
         }
         return \preg_match($this->toRegex(), $uri) !== 0;
     }
+
+    /**
+     * Build a link according a route
+     * @param array $input the parameter input
+     * @return string
+     */
+    public function link(array $input) : string
+    {
+        $result = '/';
+        if ($this->wildcard) {
+            return $result . (util\securityToken());
+        }
+        foreach ($this->path['complex'] as $path) {
+            if ($path[0] === 'plain') {
+                $result .= $path[1];
+            } else {
+                if (\array_key_exists($path[1], $input)) {
+                    $str = (string) $input[$path[1]];
+                    $reg = '#^'.$this->path['variables'][$path[1]].'$#';
+                    if (\preg_match($reg, $str) !== 0) {
+                        $result .= $str;
+                    } else {
+                        $msg = '['.$path[1].'] is not coercable';
+                        throw new exception\InvalidPathVariable($msg);
+                    }
+                } else {
+                    throw new exception\MissingField($path[1]);
+                }
+            }
+        }
+        return $result;
+    }
 }
