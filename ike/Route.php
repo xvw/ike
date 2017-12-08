@@ -144,7 +144,7 @@ class Route
     {
         $result = '/';
         if ($this->wildcard) {
-            return $result . (util\securityToken());
+            return util\uniqId('/ike', 'tmp-endpoint.html');
         }
         foreach ($this->path['complex'] as $path) {
             if ($path[0] === 'plain') {

@@ -13,6 +13,20 @@ function tokenize(string $str) : string
     return strtolower(trim($str));
 }
 
+
+/**
+ * Create a "potential" uniq ID.
+ * @param string prefix : the prefix of the uniq ID (maybe the tag name)
+ * @param string suffix : the suffix of the uniq ID (for more uniqness)
+ * @return string A String as a potential uniq ID
+ */
+function uniqId(string $prefix = '', string $suffix = null) : string
+{
+    $suffix = $suffix ?? time();
+    $prefix = ($prefix === '') ? $prefix : $prefix.'-';
+    $suffix = ($suffix === '') ? $suffix : '-'.$suffix;
+    return \uniqid($prefix).$suffix;
+}
 /**
  * Generate a token (for csrftoken, for example)
  * @return string
