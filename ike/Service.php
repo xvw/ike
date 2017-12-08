@@ -8,7 +8,22 @@ namespace ike;
  */
 class Service
 {
-    private $method;
-    private $route;
-    private $parameters;
+    protected $method;
+    protected $route;
+    protected $parameters;
+
+    /**
+     * Build a Service
+     * @param string $method the method of the service
+     * @param string $path the path to build a route
+     * @param string $params the parameters
+     */
+    public function __construct(string $method, string $path, array $params)
+    {
+        $this->method = util\tokenize($method);
+        $this->route = new Route($path);
+        $this->parameters = \array_map(function ($elt) {
+            return type\regexFor($elt);
+        }, $params);
+    }
 }

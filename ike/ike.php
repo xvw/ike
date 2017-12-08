@@ -5,7 +5,7 @@ session_start();
 
 require 'exception/exception.php';
 require 'util.php';
-require 'types.php';
+require 'type.php';
 require 'Route.php';
 require 'Service.php';
 require 'Context.php';
