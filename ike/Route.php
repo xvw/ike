@@ -10,6 +10,8 @@ namespace ike;
 class Route
 {
     protected $path;
+    protected $raw;
+    protected $variables;
     protected $wildcard;
 
     /**
@@ -18,7 +20,6 @@ class Route
      */
     public function __construct(string $path)
     {
-        $this->path = [];
         $this->buildPath($path);
     }
 
@@ -28,9 +29,9 @@ class Route
      */
     private function buildPath(string $path)
     {
-        $this->path['raw'] = $path;
-        $this->path['variables'] = [];
-        $this->path['complex'] = [];
+        $this->raw = $path;
+        $this->variables = [];
+        $this->path = [];
         $this->wildcard = false;
         if ($path === '*') {
             $this->wildcard = true;
@@ -46,10 +47,10 @@ class Route
     {
         $reg   = '/(\{.+?\})/';
         $flags = PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE;
-        $members = preg_split($reg, $this->path['raw'], -1, $flags);
+        $members = preg_split($reg, $this->raw, -1, $flags);
         foreach ($members as $member) {
             if (!$this->memberIsVariable($member)) {
-                $this->path['complex'][] = ['plain', $member];
+                $this->path[] = ['plain', $member];
             } else {
                 $this->buildInternalVariable($member);
             }
@@ -78,16 +79,16 @@ class Route
             $length = count($exploded);
             if ($length == 1) {
                 $this->checkVariableUnicity($capture);
-                $this->path['variables'][$capture] = 'string';
-                $this->path['complex'][] = ['variable', $capture];
+                $this->variables[$capture] = 'string';
+                $this->path[] = ['variable', $capture];
                 return;
             }
             if ($length == 2) {
                 $this->checkVariableUnicity($exploded[0]);
                 $variableName = $exploded[0];
                 $variableRegex = type\regexFor($exploded[1]);
-                $this->path['variables'][$variableName] = $variableRegex;
-                $this->path['complex'][] = ['variable', $variableName];
+                $this->variables[$variableName] = $variableRegex;
+                $this->path[] = ['variable', $variableName];
                 return;
             }
         }
@@ -100,7 +101,7 @@ class Route
      */
     private function checkVariableUnicity(string $key)
     {
-        if (\array_key_exists($key, $this->path['variables'])) {
+        if (\array_key_exists($key, $this->variables)) {
             throw new exception\InvalidPathVariable($key . ' already exists');
         }
     }
@@ -112,11 +113,11 @@ class Route
     public function toRegex() : string
     {
         $result = "#^";
-        foreach ($this->path['complex'] as $path) {
+        foreach ($this->path as $path) {
             if ($path[0] === 'plain') {
                 $result .= $path[1];
             } else {
-                $result .= $this->path['variables'][$path[1]];
+                $result .= $this->variables[$path[1]];
             }
         }
         return $result . "$#";
@@ -129,10 +130,7 @@ class Route
      */
     public function isAccordingTo(string $uri) : bool
     {
-        if ($this->wildcard) {
-            return true;
-        }
-        return \preg_match($this->toRegex(), $uri) !== 0;
+        return $this->wildcard || \preg_match($this->toRegex(), $uri) !== 0;
     }
 
     /**
@@ -146,13 +144,13 @@ class Route
         if ($this->wildcard) {
             return util\uniqId('/ike', 'tmp-endpoint.html');
         }
-        foreach ($this->path['complex'] as $path) {
+        foreach ($this->path as $path) {
             if ($path[0] === 'plain') {
                 $result .= $path[1];
             } else {
                 if (\array_key_exists($path[1], $input)) {
                     $str = (string) $input[$path[1]];
-                    $reg = '#^'.$this->path['variables'][$path[1]].'$#';
+                    $reg = '#^'.$this->variables[$path[1]].'$#';
                     if (\preg_match($reg, $str) !== 0) {
                         $result .= $str;
                     } else {
