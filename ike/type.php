@@ -29,6 +29,10 @@ const File = 6;
 function validHTTPType(string $method, string $key, $type)
 {
     if (\is_array($type)) {
+        if (count($type) > 1) {
+            $message = '['.$key.'] has an unknown type';
+            throw new \ike\exception\InvalidHTTPType($message);
+        }
         return validHTTPType($method, $key, $type[0]);
     }
     if ($type < Free || $type > File) {
