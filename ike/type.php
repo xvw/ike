@@ -4,6 +4,22 @@ declare(strict_types=1);
 namespace ike\type;
 
 /**
+ * Define the types for HTTP parameters
+ */
+const String = 0;
+const Free = 0;
+const Untyped = 0;
+const Text = 0;
+const Integer = 1;
+const Int = 1;
+const Float = 2;
+const Char = 3;
+const Character = 3;
+const Bool = 4;
+const Boolean = 4;
+const File = 5;
+
+/**
  * Defines the list of all "regexable types"
  * @return array
  */

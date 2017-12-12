@@ -8,7 +8,6 @@ namespace ike;
  */
 class Context
 {
-    protected $code;
     protected $method;
     protected $path;
     protected $parameters;
@@ -19,7 +18,6 @@ class Context
      */
     public function __construct()
     {
-        $this->code = \http_response_code();
         $this->method = util\tokenize($_SERVER['REQUEST_METHOD']);
         $this->path = $this->computePath();
         $this->parameters = [];

@@ -20,10 +20,8 @@ class Service
      */
     public function __construct(string $method, string $path, array $params)
     {
-        $this->method = util\tokenize($method);
+        $this->method = util\validHttpMethod($method);
         $this->route = new Route($path);
-        $this->parameters = \array_map(function ($elt) {
-            return type\regexFor($elt);
-        }, $params);
+        $this->parameters = $params;
     }
 }

@@ -79,7 +79,7 @@ class Route
             $length = count($exploded);
             if ($length == 1) {
                 $this->checkVariableUnicity($capture);
-                $this->variables[$capture] = 'string';
+                $this->variables[$capture] = type\regexFor('string');
                 $this->path[] = ['variable', $capture];
                 return;
             }

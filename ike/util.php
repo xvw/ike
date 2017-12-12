@@ -4,6 +4,16 @@ declare(strict_types=1);
 namespace ike\util;
 
 /**
+ * A simple identity function
+ * @param mixed $x
+ * @return mixed
+ */
+function identity(mixed $x) : mixed
+{
+    return $x;
+}
+
+/**
  * Trim + downcase on a string
  * @param string $str the string to be tokenized
  * @return string
@@ -22,7 +32,7 @@ function tokenize(string $str) : string
  */
 function uniqId(string $prefix = '', string $suffix = null) : string
 {
-    $suffix = $suffix ?? time();
+    $suffix = $suffix || time();
     $prefix = ($prefix === '') ? $prefix : $prefix.'-';
     $suffix = ($suffix === '') ? $suffix : '-'.$suffix;
     return \uniqid($prefix).$suffix;
@@ -69,6 +79,40 @@ function suggestionFor(string $key, array $keys) : string
         return ($a-$b) ? ($a-$b)/abs($a-$b) : 0;
     }));
     return $clone[0];
+}
+
+/**
+ * Perform and identity of a string if the string is include into a
+ * dataset. Throws an exception if the value is not include into the
+ * container.
+ * @param string $key the data
+ * @param array $keys to be matched
+ * @return string
+ * @throws exception\NeedSuggestion
+ *
+ */
+function validWithSuggestion(string $data, array $keys) : string
+{
+    if (!\in_array($data, $keys)) {
+        $suggestion = suggestionFor($data, $keys);
+        throw new \ike\exception\NeedSuggestion($data, $suggestion);
+    }
+    return $data;
+}
+
+
+/**
+ * Validation over HTTP method
+ * @param string  $method the method to be validated
+ * @return string
+ * @throws exception\NeedSuggestion
+ *
+ */
+function validHttpMethod(string $method) : string
+{
+    $verbs = ['get', 'post', 'patch', 'put', 'delete'];
+    $token = tokenize($method);
+    return validWithSuggestion($token, $verbs);
 }
 
 /**
