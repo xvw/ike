@@ -20,6 +20,26 @@ const Boolean = 4;
 const File = 5;
 
 /**
+ * Check if a type is valid for a service
+ * @param string $method the HTTP method
+ * @param string $key the type name
+ * @param int $type the type value
+ * @throws \ike\exception\InvalidHTTPType
+ */
+function validHTTPType(string $method, string $key, int $type)
+{
+    if ($type < String || $type > File) {
+        $message = '['.$key.'] has an unknown type';
+        throw new \ike\exception\InvalidHTTPType($message);
+    }
+    if ($type === File && $method != 'post') {
+        $message = '['.$key.'] has type [file], ';
+        $message .= 'this type is only allowed for POST service';
+        throw new \ike\exception\InvalidHTTPType($message);
+    }
+}
+
+/**
  * Defines the list of all "regexable types"
  * @return array
  */

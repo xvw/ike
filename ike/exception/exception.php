@@ -50,6 +50,10 @@ class InvalidType extends NeedSuggestion
 {
 }
 
+class InvalidHTTPType extends Base
+{
+}
+
 class InvalidFunction extends Base
 {
 }

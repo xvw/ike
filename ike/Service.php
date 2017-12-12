@@ -22,6 +22,20 @@ class Service
     {
         $this->method = util\validHttpMethod($method);
         $this->route = new Route($path);
-        $this->parameters = $params;
+        $this->setParameters($params);
+    }
+
+    /**
+     * Set the parameters with verification
+     * @param array $params the HTTP's parameters
+     * @throws \ike\exception\InvalidHTTPType
+     */
+    private function setParameters(array $params)
+    {
+        $this->parameters = [];
+        foreach ($params as $key => $type) {
+            \ike\type\validHTTPType($this->method, $key, $type);
+            $this->parameters[$key] = $type;
+        }
     }
 }

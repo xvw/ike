@@ -8,10 +8,10 @@ use ike\type as type;
 $ctx = new ike\Context();
 $s =
   new ike\Service(
-    'elete',
+    'post',
     'foo/bar/lol',
     [ 'foo' => type\String
-    , 'bar' => type\Int
+    , 'bar' => type\File
     ]
 );
 
