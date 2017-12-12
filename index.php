@@ -10,10 +10,10 @@ $s =
   new ike\Service(
     'post',
     'foo/bar/lol',
-    [ 'foo' => type\String
+    [ 'foo' => [type\String]
     , 'bar' => type\File
     ]
 );
 
 
-var_dump($s);
+var_dump($s->isBootable($ctx));

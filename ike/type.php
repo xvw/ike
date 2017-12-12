@@ -6,29 +6,32 @@ namespace ike\type;
 /**
  * Define the types for HTTP parameters
  */
-const String = 0;
 const Free = 0;
 const Untyped = 0;
-const Text = 0;
-const Integer = 1;
-const Int = 1;
-const Float = 2;
-const Char = 3;
-const Character = 3;
-const Bool = 4;
-const Boolean = 4;
-const File = 5;
+const String = 1;
+const Text = 1;
+const Integer = 2;
+const Int = 2;
+const Float = 3;
+const Char = 4;
+const Character = 4;
+const Bool = 5;
+const Boolean = 5;
+const File = 6;
 
 /**
  * Check if a type is valid for a service
  * @param string $method the HTTP method
  * @param string $key the type name
- * @param int $type the type value
+ * @param mixed $type the type value
  * @throws \ike\exception\InvalidHTTPType
  */
-function validHTTPType(string $method, string $key, int $type)
+function validHTTPType(string $method, string $key, $type)
 {
-    if ($type < String || $type > File) {
+    if (\is_array($type)) {
+        return validHTTPType($method, $key, $type[0]);
+    }
+    if ($type < Free || $type > File) {
         $message = '['.$key.'] has an unknown type';
         throw new \ike\exception\InvalidHTTPType($message);
     }

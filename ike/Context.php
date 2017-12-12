@@ -90,4 +90,19 @@ class Context
     {
         return $route->isAccordingTo($this->path);
     }
+
+    /**
+     * Check if a context is according to parameters
+     * @param array $contract check if the parameters are ok
+     * @return array
+     */
+    public function coersParameters(array $contract) : array
+    {
+        $params = $this->currentParameters();
+        $buffer = [];
+        foreach ($contract as $key => $type) {
+            echo $key;
+        }
+        return [true, $buffer];
+    }
 }

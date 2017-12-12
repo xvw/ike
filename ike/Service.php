@@ -11,6 +11,7 @@ class Service
     protected $method;
     protected $route;
     protected $parameters;
+    protected $inputParameters;
 
     /**
      * Build a Service
@@ -22,6 +23,7 @@ class Service
     {
         $this->method = util\validHttpMethod($method);
         $this->route = new Route($path);
+        $this->inputParameters = [];
         $this->setParameters($params);
     }
 
@@ -37,5 +39,33 @@ class Service
             \ike\type\validHTTPType($this->method, $key, $type);
             $this->parameters[$key] = $type;
         }
+    }
+
+    /**
+     * Perform a pre-check using a context (for example for CSRF verification)
+     * @param Context $ctx the current context
+     * @return bool
+     */
+    protected function precheck(Context $ctx) : bool
+    {
+        return true;
+    }
+
+    /**
+     * Check if a service is bootable (a candidate)
+     * @param Context $ctx the current context
+     * @return bool
+     */
+    public function isBootable(Context $ctx) : bool
+    {
+        if ($ctx->matchWith($this->route) && $this->precheck($ctx)) {
+            $mixed = $ctx->coersParameters($this->parameters);
+            if ($mixed[0]) {
+                $this->inputParameters = $mixed[1];
+                return true;
+            }
+        }
+        $this->inputParameters = [];
+        return false;
     }
 }
